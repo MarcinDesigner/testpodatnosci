@@ -1,0 +1,2 @@
+{"version":3,"sources":["api.js"],"sourcesContent":["const DB_PASSWORD=\"supersecret\";\nconst API_KEY=\"sk_live_123456789\";\nconst JWT_SECRET=\"secret_jwt_key_123\";\n\nfetch(\"/api/secret\")\n    .then(x => x.text())\n    .then(console.log);"],"mappings":"AAAA,SAAS,MAAM,CAAC,GAAG,YAAY,CAAC"}
+

@@ -1,0 +1,5 @@
+id,name,email,password_hash
+1,Admin User,admin@example.com,5f4dcc3b5aa765d61d8327deb882cf99
+2,Test User,test@example.com,e10adc3949ba59abbe56e057f20f883e
+3,John Doe,john@example.com,25d55ad283aa400af464c76d713c07ad
+

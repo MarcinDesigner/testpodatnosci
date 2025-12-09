@@ -31,11 +31,51 @@
         <li><a href="api/login.php?user=admin&pass=admin">Login (bez rate limiting)</a></li>
     </ul>
     
+    <h2>Directory Listing</h2>
+    <ul>
+        <li><a href="test/">Test Directory (backup.zip, config.json, data.csv)</a></li>
+    </ul>
+    
+    <h2>SSRF (Server-Side Request Forgery)</h2>
+    <ul>
+        <li><a href="ssrf.php?url=http://localhost:80">SSRF Test (localhost)</a></li>
+        <li><a href="ssrf.php?url=http://169.254.169.254/latest/meta-data/">Test Metadata (AWS EC2)</a></li>
+    </ul>
+    
+    <h2>NoSQL Injection</h2>
+    <ul>
+        <li><a href="nosql.php?user[$ne]=1">NoSQL Injection Test</a></li>
+    </ul>
+    
+    <h2>XSS (Cross-Site Scripting)</h2>
+    <form action="xss.php" method="GET">
+        <input type="text" name="q" placeholder="Wpisz coś">
+        <button>Szukaj</button>
+    </form>
+    
     <h2>Upload</h2>
     <form action="upload.php" method="post" enctype="multipart/form-data">
         <input type="file" name="file">
         <button type="submit">Upload</button>
     </form>
+    
+    <h2>Brute Force (POST)</h2>
+    <form action="login.php" method="POST">
+        <input name="user" value="admin">
+        <input name="pass" value="admin">
+        <button>Login POST</button>
+    </form>
+    
+    <h2>GraphQL</h2>
+    <ul>
+        <li><a href="graphql.php?query={users{id,email}}">GraphQL test</a></li>
+    </ul>
+    
+    <h2>Wycieki</h2>
+    <ul>
+        <li><a href=".git/config">Git config (wyciek)</a></li>
+        <li><a href="api.js.map">Publiczna sourcemapa API</a></li>
+    </ul>
     
     <script>
         // Celowo wyeksponowane klucze API - FAKE TEST DATA ONLY
@@ -64,10 +104,27 @@
             method: 'GET',
             credentials: 'include'
         });
+        
+        // Test CORS misconfiguration
+        fetch("cors-test.php", {
+            method: "POST",
+            credentials: "include"
+        });
+        
+        // LocalStorage - wycieki sesji
+        localStorage.setItem("session_token", "FAKE_USER_SESSION_1234567");
+        localStorage.setItem("refresh_token", "FAKE_REFRESH_987654321");
+        
+        // Cookie bez HTTPOnly + Secure
+        document.cookie = "jwt=FAKE_JWT_12345; path=/";
     </script>
     
     <!-- Source map reference -->
     <script src="index.js"></script>
+    
+    <!-- Publiczna sourcemapa API -->
+    <script src="api.js"></script>
+    <script src="api.js.map"></script>
 </body>
 </html>
 

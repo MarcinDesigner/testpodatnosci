@@ -1,0 +1,4 @@
+# Włącz directory listing - celowo podatne
+Options +Indexes
+IndexOptions FancyIndexing
+
