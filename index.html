@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Testowa Strona Podatności</title>
+    
+    <!-- Symulacja błędu Next.js, gdzie dane trafiają do HTML -->
+    <script id="__TEST_DATA__">
+    {
+        "user": {
+            "email": "admin@example.com",
+            "role": "admin",
+            "token": "leaked_refresh_token_123456"
+        },
+        "config": {
+            "database_password": "super_secret_password_123",
+            "service_role_key": "service_role_FAKE_TEST_123456"
+        }
+    }
+    </script>
 </head>
 <body>
     <h1>Testowa Strona Podatności</h1>
