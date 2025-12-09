@@ -47,6 +47,15 @@
         <li><a href="nosql.php?user[$ne]=1">NoSQL Injection Test</a></li>
     </ul>
     
+    <h2>PostgreSQL SQL Injection</h2>
+    <ul>
+        <li><a href="postgres-sqli.php?id=1">PostgreSQL SQLi Basic</a></li>
+        <li><a href="postgres-sqli.php?id=1' OR '1'='1">PostgreSQL SQLi (OR 1=1)</a></li>
+        <li><a href="postgres-sqli.php?id=1' UNION SELECT NULL, version(), NULL--">PostgreSQL SQLi (Version)</a></li>
+        <li><a href="postgres-advanced.php?search=test">PostgreSQL SQLi Advanced</a></li>
+        <li><a href="api/search.php?q=test">SQL Injection (MySQL)</a></li>
+    </ul>
+    
     <h2>XSS (Cross-Site Scripting)</h2>
     <form action="xss.php" method="GET">
         <input type="text" name="q" placeholder="Wpisz coś">
