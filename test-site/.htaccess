@@ -1,0 +1,13 @@
+# Celowo brak nagłówków bezpieczeństwa
+# ŻADNEGO X-Frame-Options
+# ŻADNEGO X-Content-Type-Options
+# ŻADNEGO CSP
+# ŻADNEGO HSTS
+# ŻADNEGO Referrer-Policy
+
+# Pozwól na dostęp do wszystkich plików
+Options +Indexes
+
+# Brak ochrony przed directory listing
+# Brak blokowania dostępu do .env, .git, etc.
+
