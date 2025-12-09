@@ -1,0 +1,2 @@
+{"version":3,"sources":["index.js"],"sourcesContent":["const secret = 'tokentest123';\nconst apiKey = 'sk_live_123456789';\nconst dbPassword = 'password123';\n\nfunction connect() {\n  return {\n    host: 'localhost',\n    user: 'admin',\n    password: dbPassword\n  };\n}"],"mappings":"AAAA,SAAS,MAAM,CAAC,GAAG,YAAY,CAAC"}
+

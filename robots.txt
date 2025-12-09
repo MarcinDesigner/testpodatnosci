@@ -1,0 +1,15 @@
+# Celowo ujawniający wrażliwe ścieżki
+User-agent: *
+Disallow: /admin/
+Disallow: /backup/
+Disallow: /database/
+Disallow: /config/
+Allow: /uploads/
+Allow: /.git/
+Allow: /.env
+
+# Ujawnione wrażliwe ścieżki
+# /admin/panel.php
+# /backup/database_backup_2024.sql
+# /config/secrets.json
+

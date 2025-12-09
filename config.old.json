@@ -1,0 +1,14 @@
+{
+  "database": {
+    "host": "localhost",
+    "user": "admin",
+    "password": "oldpassword123",
+    "database": "production_db"
+  },
+  "api_keys": {
+    "stripe": "sk_live_oldkey123456",
+    "aws": "AKIAOLDKEYEXAMPLE"
+  },
+  "jwt_secret": "old_secret_key_123456"
+}
+

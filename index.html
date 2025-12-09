@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testowa Strona Podatności</title>
+</head>
+<body>
+    <h1>Testowa Strona Podatności</h1>
+    <p>To jest celowo podatna strona testowa.</p>
+    
+    <h2>Testy API</h2>
+    <ul>
+        <li><a href="api.php?id=1">API Endpoint 1</a></li>
+        <li><a href="api.php?id=2">API Endpoint 2</a></li>
+        <li><a href="api/login.php?user=admin&pass=admin">Login (bez rate limiting)</a></li>
+    </ul>
+    
+    <h2>Upload</h2>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">Upload</button>
+    </form>
+    
+    <script>
+        // Celowo wyeksponowane klucze API - FAKE TEST DATA ONLY
+        const STRIPE = "sk_live_FAKE_TEST_KEY_12345678901234567890";
+        const ALGOLIA_KEY = "FAKE_TEST_AGKASD123-SDF-456-789";
+        const TWITTER_BEARER = "FAKE_TEST_BEARER_TOKEN_AAAAAAAAAAAAAAAAAAAAAAAA";
+        const AWS_ACCESS_KEY = "AKIAFAKETESTEXAMPLE123";
+        const AWS_SECRET_KEY = "FAKE_TEST_wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
+        
+        // Firebase config z anonimową autentykacją
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKey123456789",
+            authDomain: "test-vulnerable.firebaseapp.com",
+            projectId: "test-vulnerable",
+            storageBucket: "test-vulnerable.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef123456"
+        };
+        
+        // Test CORS
+        fetch('api.php?id=1', {
+            method: 'GET',
+            credentials: 'include'
+        });
+    </script>
+    
+    <!-- Source map reference -->
+    <script src="index.js"></script>
+</body>
+</html>
+
