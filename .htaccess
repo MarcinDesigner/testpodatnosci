@@ -11,3 +11,6 @@ Options +Indexes
 # Brak ochrony przed directory listing
 # Brak blokowania dostępu do .env, .git, etc.
 
+# Ujawnij informacje o serwerze (celowo podatne)
+# ServerTokens Full w Apache
+# X-Powered-By header

@@ -71,10 +71,112 @@
         <li><a href="graphql.php?query={users{id,email}}">GraphQL test</a></li>
     </ul>
     
+    <h2>XXE (XML External Entity)</h2>
+    <ul>
+        <li><a href="xxe.php">XXE Test</a></li>
+    </ul>
+    
+    <h2>Path Traversal</h2>
+    <ul>
+        <li><a href="path-traversal.php?file=../../etc/passwd">Path Traversal Test</a></li>
+    </ul>
+    
+    <h2>Open Redirect</h2>
+    <ul>
+        <li><a href="redirect.php?url=https://evil.com">Open Redirect Test</a></li>
+    </ul>
+    
+    <h2>CSRF (Cross-Site Request Forgery)</h2>
+    <ul>
+        <li><a href="csrf-test.php">CSRF Test</a></li>
+    </ul>
+    
+    <h2>JWT Weaknesses</h2>
+    <ul>
+        <li><a href="jwt-test.php">JWT Test (alg=none, weak secret)</a></li>
+    </ul>
+    
+    <h2>Command Injection</h2>
+    <ul>
+        <li><a href="command-injection.php?cmd=whoami">Command Injection Test</a></li>
+    </ul>
+    
+    <h2>Verbose Error Messages</h2>
+    <ul>
+        <li><a href="error-test.php">Error Test (stack traces)</a></li>
+    </ul>
+    
+    <h2>Debug Mode</h2>
+    <ul>
+        <li><a href="debug.php">Debug Mode (phpinfo)</a></li>
+    </ul>
+    
+    <h2>Host Header Injection</h2>
+    <ul>
+        <li><a href="host-header.php">Host Header Injection Test</a></li>
+    </ul>
+    
+    <h2>HTTP Parameter Pollution</h2>
+    <ul>
+        <li><a href="parameter-pollution.php?user=admin&user=attacker">Parameter Pollution Test</a></li>
+    </ul>
+    
+    <h2>LDAP Injection</h2>
+    <ul>
+        <li><a href="ldap-injection.php?username=*)(&">LDAP Injection Test</a></li>
+    </ul>
+    
+    <h2>XPATH Injection</h2>
+    <ul>
+        <li><a href="xpath-injection.php?name=' or '1'='1">XPATH Injection Test</a></li>
+    </ul>
+    
+    <h2>Mass Assignment</h2>
+    <ul>
+        <li><a href="mass-assignment.php">Mass Assignment Test</a></li>
+    </ul>
+    
+    <h2>Password Reset</h2>
+    <ul>
+        <li><a href="password-reset.php?email=admin@example.com">Insecure Password Reset</a></li>
+    </ul>
+    
+    <h2>User Enumeration</h2>
+    <ul>
+        <li><a href="user-enumeration.php?email=admin@example.com&password=wrong">User Enumeration Test</a></li>
+    </ul>
+    
+    <h2>Exposed Admin Panel</h2>
+    <ul>
+        <li><a href="admin.php">Admin Panel (default credentials)</a></li>
+    </ul>
+    
+    <h2>Business Logic Flaws</h2>
+    <ul>
+        <li><a href="business-logic.php">Business Logic Test (negative prices)</a></li>
+    </ul>
+    
+    <h2>Session Fixation</h2>
+    <ul>
+        <li><a href="session-fixation.php?user=admin">Session Fixation Test</a></li>
+    </ul>
+    
+    <h2>Insecure Deserialization</h2>
+    <ul>
+        <li><a href="deserialization.php">Deserialization Test</a></li>
+    </ul>
+    
+    <h2>Information Disclosure</h2>
+    <ul>
+        <li><a href="headers.php">Exposed Headers (X-Powered-By, Server)</a></li>
+    </ul>
+    
     <h2>Wycieki</h2>
     <ul>
         <li><a href=".git/config">Git config (wyciek)</a></li>
         <li><a href="api.js.map">Publiczna sourcemapa API</a></li>
+        <li><a href=".env">.env file</a></li>
+        <li><a href="config.php">Config file</a></li>
     </ul>
     
     <script>
