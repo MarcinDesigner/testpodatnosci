@@ -1,3 +1,5 @@
+[![Security](https://securityscan.dev/api/ci/badge/MarcinDesigner/testpodatnosci)](https://securityscan.dev)
+
 # ⚠️ OSTRZEŻENIE - CELOWO PODATNA STRONA TESTOWA
 
 **Ta strona została celowo stworzona z podatnościami bezpieczeństwa do testów.**
