@@ -29,8 +29,10 @@ jobs:
           find . -type f \
             \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" \
                -o -name "*.py" -o -name "*.rb" -o -name "*.php" -o -name "*.go" \
+               -o -name "*.java" -o -name "*.kt" -o -name "*.swift" -o -name "*.c" -o -name "*.cpp" \
                -o -name "*.env*" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \
-               -o -name "Dockerfile*" -o -name "docker-compose*" \) \
+               -o -name "*.html" -o -name "*.xml" -o -name "*.txt" -o -name "*.config" \
+               -o -name "Dockerfile*" -o -name "docker-compose*" -o -name ".env*" \) \
             ! -path "*/node_modules/*" \
             ! -path "*/.git/*" \
             ! -path "*/vendor/*" \
@@ -39,7 +41,7 @@ jobs:
             ! -name "package-lock.json" \
             ! -name "yarn.lock" \
             ! -name "*.min.js" \
-            2>/dev/null | head -300 | while read -r file; do
+            2>/dev/null | head -200 | while read -r file; do
             
             SIZE=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null || echo 999999)
             if [ "$SIZE" -lt 102400 ]; then
@@ -58,8 +60,12 @@ jobs:
           
           echo "]" >> /tmp/files.json
           
-          # Build payload
-          PAYLOAD=$(jq -n \
+          # Debug: show files count
+          FILES_COUNT=$(jq 'length' /tmp/files.json)
+          echo "📁 Files collected: $FILES_COUNT"
+          
+          # Build payload and save to file (avoid "Argument list too long")
+          jq -n \
             --arg repo "${{ github.repository }}" \
             --arg commit "${{ github.sha }}" \
             --arg branch "${{ github.head_ref }}" \
@@ -73,13 +79,13 @@ jobs:
               files: $files[0],
               scanMode: "ci",
               provider: "github"
-            }')
+            }' > /tmp/payload.json
           
-          # Call SecurityScan API
+          # Call SecurityScan API using file (avoids argument length limit)
           RESPONSE=$(curl -s -X POST \
             -H "Content-Type: application/json" \
             -H "X-CI-Token: ${{ secrets.SECURITYSCAN_TOKEN }}" \
-            -d "$PAYLOAD" \
+            -d @/tmp/payload.json \
             "https://auth.securityscan.dev/api/ci/scan")
           
           # Parse response
