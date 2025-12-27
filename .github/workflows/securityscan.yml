@@ -1,0 +1,122 @@
+name: Security Scan
+
+on:
+  pull_request:
+    branches: [main, master, develop]
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  security-scan:
+    name: SecurityScan.dev / Preflight Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run SecurityScan
+        run: |
+          echo "🔒 SecurityScan.dev - PR Security Check"
+          echo "========================================"
+          
+          # Collect files to scan
+          > /tmp/files.json
+          echo "[" >> /tmp/files.json
+          FIRST=true
+          
+          find . -type f \
+            \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" \
+               -o -name "*.py" -o -name "*.rb" -o -name "*.php" -o -name "*.go" \
+               -o -name "*.env*" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \
+               -o -name "Dockerfile*" -o -name "docker-compose*" \) \
+            ! -path "*/node_modules/*" \
+            ! -path "*/.git/*" \
+            ! -path "*/vendor/*" \
+            ! -path "*/dist/*" \
+            ! -path "*/build/*" \
+            ! -name "package-lock.json" \
+            ! -name "yarn.lock" \
+            ! -name "*.min.js" \
+            2>/dev/null | head -300 | while read -r file; do
+            
+            SIZE=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null || echo 999999)
+            if [ "$SIZE" -lt 102400 ]; then
+              CONTENT=$(base64 -w 0 "$file" 2>/dev/null || base64 "$file" 2>/dev/null)
+              if [ -n "$CONTENT" ]; then
+                ESCAPED_PATH=$(echo "$file" | sed 's/"/\\"/g' | sed 's/^\.\///')
+                if [ "$FIRST" = "true" ]; then
+                  FIRST=false
+                else
+                  echo "," >> /tmp/files.json
+                fi
+                echo "{\"path\":\"$ESCAPED_PATH\",\"content\":\"$CONTENT\"}" >> /tmp/files.json
+              fi
+            fi
+          done
+          
+          echo "]" >> /tmp/files.json
+          
+          # Build payload
+          PAYLOAD=$(jq -n \
+            --arg repo "${{ github.repository }}" \
+            --arg commit "${{ github.sha }}" \
+            --arg branch "${{ github.head_ref }}" \
+            --arg pr "${{ github.event.pull_request.number }}" \
+            --slurpfile files /tmp/files.json \
+            '{
+              repo: $repo,
+              commit: $commit,
+              branch: (if $branch != "" then $branch else "${{ github.ref_name }}" end),
+              pr_number: (if $pr != "" then ($pr | tonumber) else null end),
+              files: $files[0],
+              scanMode: "ci",
+              provider: "github"
+            }')
+          
+          # Call SecurityScan API
+          RESPONSE=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-CI-Token: ${{ secrets.SECURITYSCAN_TOKEN }}" \
+            -d "$PAYLOAD" \
+            "https://auth.securityscan.dev/api/ci/scan")
+          
+          # Parse response
+          STATUS=$(echo "$RESPONSE" | jq -r '.status // "error"')
+          SCORE=$(echo "$RESPONSE" | jq -r '.score // 0')
+          SCAN_ID=$(echo "$RESPONSE" | jq -r '.scan_id // ""')
+          ERROR=$(echo "$RESPONSE" | jq -r '.error // ""')
+          
+          if [ -n "$ERROR" ] && [ "$ERROR" != "null" ]; then
+            echo "❌ Error: $ERROR"
+            exit 1
+          fi
+          
+          # Summary
+          CRITICAL=$(echo "$RESPONSE" | jq -r '.summary.critical // 0')
+          HIGH=$(echo "$RESPONSE" | jq -r '.summary.high // 0')
+          MEDIUM=$(echo "$RESPONSE" | jq -r '.summary.medium // 0')
+          
+          echo ""
+          echo "========================================"
+          if [ "$STATUS" = "pass" ]; then
+            echo "✅ PASSED - Score: $SCORE/100"
+          elif [ "$STATUS" = "warn" ]; then
+            echo "⚠️  WARNING - Score: $SCORE/100"
+          else
+            echo "❌ FAILED - Score: $SCORE/100"
+          fi
+          echo "========================================"
+          echo ""
+          echo "📊 Findings: 🔴 Critical: $CRITICAL | 🟠 High: $HIGH | 🟡 Medium: $MEDIUM"
+          echo "🔗 Report: https://securityscan.dev/ci/scan/$SCAN_ID"
+          
+          # Show findings
+          echo ""
+          echo "$RESPONSE" | jq -r '.findings[]? | "  \(.type): \(.message) (\(.file):\(.line))"' 2>/dev/null | head -10
+          
+          # Exit code
+          if [ "$STATUS" = "fail" ]; then
+            exit 1
+          fi
